@@ -33,3 +33,27 @@ void canbus_setup(void)
     // Start canbus
     can2040_start(&cbus, sys_clock, bitrate, gpio_rx, gpio_tx);
 }
+
+void send_canbus(void)
+{
+    struct can2040_msg msg = {
+        .id = 0x123,
+        .dlc = 8,
+        .data = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08},
+    };
+
+    can2040_transmit(&cbus, &msg);
+}
+
+int main()
+{
+    stdio_init_all();
+    canbus_setup();
+
+    while (1) {
+        send_canbus();
+        sleep_ms(100);
+    }
+
+    return 0;
+}
